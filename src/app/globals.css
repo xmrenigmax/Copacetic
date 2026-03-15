@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* Copacetic Custom Structural Utilities */
+@theme {
+  --color-primary: #0f172a;
+  --color-secondary: #1e293b;
+}
+
+@layer utilities {
+  .bg-primary { background-color: var(--color-primary); }
+  .bg-secondary { background-color: var(--color-secondary); }
+  .bdT { border-top: 1px solid #334155; }
+  .bdR { border-right: 1px solid #334155; }
+  .bdB { border-bottom: 1px solid #334155; }
+  .tt-u { text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; }
+}

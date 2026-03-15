@@ -1,0 +1,36 @@
+{
+  "name": "copacetic",
+  "main": "main/main.js",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "copacetic:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\""
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
+    "lodash": "^4.17.23",
+    "next": "16.1.6",
+    "postcss": "^8.5.8",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.24",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^41.0.2",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "typescript": "^5",
+    "wait-on": "^9.0.4"
+  }
+}
