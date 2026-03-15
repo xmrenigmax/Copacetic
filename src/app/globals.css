@@ -1,16 +1,29 @@
 @import "tailwindcss";
 
-/* Copacetic Custom Structural Utilities */
 @theme {
-  --color-primary: #0f172a;
-  --color-secondary: #1e293b;
+  --color-primary: rgba(15, 0, 0, 0.4);
+  --color-secondary: rgba(0, 0, 0, 0.7);
 }
 
 @layer utilities {
-  .bg-primary { background-color: var(--color-primary); }
-  .bg-secondary { background-color: var(--color-secondary); }
-  .bdT { border-top: 1px solid #334155; }
-  .bdR { border-right: 1px solid #334155; }
-  .bdB { border-bottom: 1px solid #334155; }
+  .bg-primary { background-color: var(--color-primary); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); }
+  .bg-secondary { background-color: var(--color-secondary); backdrop-filter: blur(48px); -webkit-backdrop-filter: blur(48px); }
+  .bdT { border-top: 1px solid rgba(255, 100, 100, 0.05); }
+  .bdR { border-right: 1px solid rgba(255, 100, 100, 0.05); }
+  .bdB { border-bottom: 1px solid rgba(255, 100, 100, 0.05); }
   .tt-u { text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; }
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(-45deg, #050000, #1a0000, #2b0000, #050000);
+  background-size: 400% 400%;
+  animation: meshGradient 20s ease-in-out infinite;
+}
+
+@keyframes meshGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

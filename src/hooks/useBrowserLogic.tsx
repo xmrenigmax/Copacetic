@@ -8,8 +8,8 @@ export const useBrowserLogic = () => {
   ] = useState([
     {
       id: 1,
-      url: 'https://google.com',
-      title: 'New Tab'
+      url: 'copacetic://newtab',
+      title: 'Start Page'
     }
   ]);
 
@@ -48,7 +48,7 @@ export const useBrowserLogic = () => {
     const newId = Date.now();
     setTabs((prevTabs) => [
       ...prevTabs,
-      { id: newId, url: 'https://google.com', title: 'New Tab' }
+      { id: newId, url: 'copacetic://newtab', title: 'Start Page' }
     ]);
     setActiveTabId(newId);
   };
