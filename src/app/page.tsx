@@ -5,6 +5,7 @@ import { useBrowserLogic } from '@/hooks/useBrowserLogic';
 import { AddressBar } from '@/components/addressbar/AddressBar';
 import { TabBar } from '@/components/tabbar/TabBar';
 import { TabWebView } from '@/view/tabwebview/TabWebView';
+import { Sidebar } from '@/components/sidebar/Sidebar';
 
 export default function Home() {
   const [
@@ -16,6 +17,9 @@ export default function Home() {
     tabs,
     activeTabId,
     activeTab,
+    isSidebarOpen,
+    isCustomised,
+    toggleSidebar,
     handleNavigate,
     handleAddTab,
     handleCloseTab,
@@ -30,10 +34,10 @@ export default function Home() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
-      <div className="w-16 bdR bg-secondary flex flex-col items-center py-4">
-        <div className="w-8 h-8 rounded-full bg-primary mb-4" />
+      <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isSidebarOpen ? 'w-16' : 'w-0'}`}>
+        <Sidebar isOpen={isSidebarOpen} isCustomised={isCustomised} />
       </div>
-      <main className="flex flex-col flex-1">
+      <main className="flex flex-col flex-1 overflow-hidden">
         <header className="bdB bg-primary pt-2">
           <TabBar
             tabs={tabs}
@@ -41,6 +45,7 @@ export default function Home() {
             onTabClick={handleTabClick}
             onCloseTab={handleCloseTab}
             onAddTab={handleAddTab}
+            onToggleSidebar={toggleSidebar}
           />
           <div className="p-2">
             <AddressBar
@@ -52,12 +57,12 @@ export default function Home() {
         <section className="flex-1 relative bg-white flex flex-col">
           {isMounted && tabs.map((tab) => (
             <TabWebView
-            key={tab.id}
-            tab={tab}
-            isActive={activeTabId === tab.id}
-            onUpdateTitle={handleUpdateTabTitle}
-            onUpdateUrl={handleUpdateTabUrl}
-          />
+              key={tab.id}
+              tab={tab}
+              isActive={activeTabId === tab.id}
+              onUpdateTitle={handleUpdateTabTitle}
+              onUpdateUrl={handleUpdateTabUrl}
+            />
           ))}
         </section>
       </main>
