@@ -18,7 +18,6 @@ export const useBrowserLogic = () => {
     setActiveTabId
   ] = useState(1);
 
-  // New Sidebar State
   const [
     isSidebarOpen,
     setIsSidebarOpen
@@ -27,7 +26,12 @@ export const useBrowserLogic = () => {
   const [
     isCustomised,
     setIsCustomised
-  ] = useState(false);
+  ] = useState(true); // Default to true so we can see the glassy effects!
+
+  const [
+    sidebarWidth,
+    setSidebarWidth
+  ] = useState(320);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -87,6 +91,8 @@ export const useBrowserLogic = () => {
     activeTab,
     isSidebarOpen,
     isCustomised,
+    sidebarWidth,
+    setSidebarWidth,
     toggleSidebar,
     handleNavigate,
     handleAddTab,

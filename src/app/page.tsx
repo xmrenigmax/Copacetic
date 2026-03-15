@@ -19,6 +19,8 @@ export default function Home() {
     activeTab,
     isSidebarOpen,
     isCustomised,
+    sidebarWidth,
+    setSidebarWidth,
     toggleSidebar,
     handleNavigate,
     handleAddTab,
@@ -32,12 +34,37 @@ export default function Home() {
     setIsMounted(true);
   }, []);
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const startX = e.clientX;
+    const startWidth = sidebarWidth;
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const newWidth = Math.max(240, Math.min(startWidth + (moveEvent.clientX - startX), 800));
+      setSidebarWidth(newWidth);
+    };
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  };
+
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
-      <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isSidebarOpen ? 'w-16' : 'w-0'}`}>
-        <Sidebar isOpen={isSidebarOpen} isCustomised={isCustomised} />
+      <div
+        className="transition-all duration-300 ease-in-out flex relative z-10"
+        style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}
+      >
+        <Sidebar isOpen={isSidebarOpen} isCustomised={isCustomised} activeUrl={activeTab?.url || ''} />
+        {isSidebarOpen && (
+          <div
+            className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500/50 transition-colors z-50"
+            onMouseDown={handleMouseDown}
+          />
+        )}
       </div>
-      <main className="flex flex-col flex-1 overflow-hidden">
+
+      <main className="flex flex-col flex-1 overflow-hidden relative z-0">
         <header className="bdB bg-primary pt-2">
           <TabBar
             tabs={tabs}
