@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useBrowserLogic } from '@/hooks/useBrowserLogic';
 import { AddressBar } from '@/components/addressbar/AddressBar';
 import { TabBar } from '@/components/tabbar/TabBar';
-import { TabWebview } from '@/view/tabwebview/TabWebView';
+import { TabWebView } from '@/view/tabwebview/TabWebView';
 
 export default function Home() {
   const [
@@ -20,7 +20,8 @@ export default function Home() {
     handleAddTab,
     handleCloseTab,
     handleTabClick,
-    handleUpdateTabTitle
+    handleUpdateTabTitle,
+    handleUpdateTabUrl
   } = useBrowserLogic();
 
   useEffect(() => {
@@ -50,12 +51,13 @@ export default function Home() {
         </header>
         <section className="flex-1 relative bg-white flex flex-col">
           {isMounted && tabs.map((tab) => (
-            <TabWebview
-              key={tab.id}
-              tab={tab}
-              isActive={activeTabId === tab.id}
-              onUpdateTitle={handleUpdateTabTitle}
-            />
+            <TabWebView
+            key={tab.id}
+            tab={tab}
+            isActive={activeTabId === tab.id}
+            onUpdateTitle={handleUpdateTabTitle}
+            onUpdateUrl={handleUpdateTabUrl}
+          />
           ))}
         </section>
       </main>

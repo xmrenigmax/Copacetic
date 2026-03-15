@@ -18,9 +18,18 @@ export const useBrowserLogic = () => {
     setActiveTabId
   ] = useState(1);
 
-  const handleUpdateTabTitle = (id: number, title: string) => {
-    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? { ...tab, title } : tab));
-  };
+  // New Sidebar State
+  const [
+    isSidebarOpen,
+    setIsSidebarOpen
+  ] = useState(false);
+
+  const [
+    isCustomised,
+    setIsCustomised
+  ] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleNavigate = (url: string) => {
     setTabs((prevTabs) => prevTabs.map((tab) => tab.id === activeTabId ? {
@@ -56,16 +65,34 @@ export const useBrowserLogic = () => {
     setActiveTabId(id);
   };
 
+  const handleUpdateTabTitle = (id: number, title: string) => {
+    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? {
+      ...tab,
+      title
+    } : tab));
+  };
+
+  const handleUpdateTabUrl = (id: number, url: string) => {
+    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? {
+      ...tab,
+      url
+    } : tab));
+  };
+
   const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
 
   return {
     tabs,
     activeTabId,
     activeTab,
+    isSidebarOpen,
+    isCustomised,
+    toggleSidebar,
     handleNavigate,
     handleAddTab,
     handleCloseTab,
     handleTabClick,
-    handleUpdateTabTitle
+    handleUpdateTabTitle,
+    handleUpdateTabUrl
   };
 };
