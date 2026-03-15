@@ -12,7 +12,6 @@ export default function Home() {
     isMounted,
     setIsMounted
   ] = useState(false);
-
   const {
     tabs,
     activeTabId,
@@ -20,7 +19,9 @@ export default function Home() {
     isSidebarOpen,
     isCustomised,
     sidebarWidth,
+    isResizing,
     setSidebarWidth,
+    setIsResizing,
     toggleSidebar,
     handleNavigate,
     handleAddTab,
@@ -35,6 +36,8 @@ export default function Home() {
   }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsResizing(true);
     const startX = e.clientX;
     const startWidth = sidebarWidth;
     const onMouseMove = (moveEvent: MouseEvent) => {
@@ -42,6 +45,7 @@ export default function Home() {
       setSidebarWidth(newWidth);
     };
     const onMouseUp = () => {
+      setIsResizing(false);
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
@@ -51,45 +55,23 @@ export default function Home() {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
-      <div
-        className="transition-all duration-300 ease-in-out flex relative z-10"
-        style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}
-      >
+      <div className={`flex relative z-10 overflow-hidden ${!isResizing ? 'transition-all duration-300 ease-in-out' : ''}`} style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}>
         <Sidebar isOpen={isSidebarOpen} isCustomised={isCustomised} activeUrl={activeTab?.url || ''} />
         {isSidebarOpen && (
-          <div
-            className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500/50 transition-colors z-50"
-            onMouseDown={handleMouseDown}
-          />
+          <div className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500/50 transition-colors z-50" onMouseDown={handleMouseDown} />
         )}
       </div>
-
       <main className="flex flex-col flex-1 overflow-hidden relative z-0">
+        {isResizing && <div className="absolute inset-0 z-50 cursor-col-resize" />}
         <header className="bdB bg-primary pt-2">
-          <TabBar
-            tabs={tabs}
-            activeTabId={activeTabId}
-            onTabClick={handleTabClick}
-            onCloseTab={handleCloseTab}
-            onAddTab={handleAddTab}
-            onToggleSidebar={toggleSidebar}
-          />
+          <TabBar tabs={tabs} activeTabId={activeTabId} onTabClick={handleTabClick} onCloseTab={handleCloseTab} onAddTab={handleAddTab} onToggleSidebar={toggleSidebar} />
           <div className="p-2">
-            <AddressBar
-              url={activeTab?.url || ''}
-              onNavigate={handleNavigate}
-            />
+            <AddressBar url={activeTab?.url || ''} onNavigate={handleNavigate} />
           </div>
         </header>
         <section className="flex-1 relative bg-white flex flex-col">
           {isMounted && tabs.map((tab) => (
-            <TabWebView
-              key={tab.id}
-              tab={tab}
-              isActive={activeTabId === tab.id}
-              onUpdateTitle={handleUpdateTabTitle}
-              onUpdateUrl={handleUpdateTabUrl}
-            />
+            <TabWebView key={tab.id} tab={tab} isActive={activeTabId === tab.id} onUpdateTitle={handleUpdateTabTitle} onUpdateUrl={handleUpdateTabUrl} />
           ))}
         </section>
       </main>

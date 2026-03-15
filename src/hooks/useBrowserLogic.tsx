@@ -26,31 +26,29 @@ export const useBrowserLogic = () => {
   const [
     isCustomised,
     setIsCustomised
-  ] = useState(true); // Default to true so we can see the glassy effects!
+  ] = useState(true);
 
   const [
     sidebarWidth,
     setSidebarWidth
   ] = useState(320);
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const [
+    isResizing,
+    setIsResizing
+  ] = useState(false);
+
+  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
 
   const handleNavigate = (url: string) => {
-    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === activeTabId ? {
-      ...tab,
-      url
-    } : tab));
+    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === activeTabId ? { ...tab, url } : tab));
   };
 
   const handleAddTab = () => {
     const newId = Date.now();
     setTabs((prevTabs) => [
       ...prevTabs,
-      {
-        id: newId,
-        url: 'https://google.com',
-        title: 'New Tab'
-      }
+      { id: newId, url: 'https://google.com', title: 'New Tab' }
     ]);
     setActiveTabId(newId);
   };
@@ -70,17 +68,11 @@ export const useBrowserLogic = () => {
   };
 
   const handleUpdateTabTitle = (id: number, title: string) => {
-    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? {
-      ...tab,
-      title
-    } : tab));
+    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? { ...tab, title } : tab));
   };
 
   const handleUpdateTabUrl = (id: number, url: string) => {
-    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? {
-      ...tab,
-      url
-    } : tab));
+    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? { ...tab, url } : tab));
   };
 
   const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
@@ -92,7 +84,9 @@ export const useBrowserLogic = () => {
     isSidebarOpen,
     isCustomised,
     sidebarWidth,
+    isResizing,
     setSidebarWidth,
+    setIsResizing,
     toggleSidebar,
     handleNavigate,
     handleAddTab,
