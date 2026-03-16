@@ -23,15 +23,16 @@ export const StartPageView = ({ isActive, auroraTheme, onNavigate }: StartPageVi
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!_.isEmpty(inputUrl)) {
-      let parsedUrl = inputUrl;
-      if (!parsedUrl.startsWith('http://') && !parsedUrl.startsWith('https://')) {
+    if (!_.isNull(inputUrl) && !_.isEmpty(inputUrl)) {
+      let parsedUrl = inputUrl.trim();
+      if (_.includes(parsedUrl, ' ') || !_.includes(parsedUrl, '.')) {
+        parsedUrl = `https://www.google.com/search?q=${encodeURIComponent(parsedUrl)}`;
+      } else if (!parsedUrl.startsWith('http://') && !parsedUrl.startsWith('https://')) {
         parsedUrl = `https://${parsedUrl}`;
       }
       onNavigate(parsedUrl);
     }
   };
-
   return (
     <div className={`relative w-full h-full flex flex-col items-center justify-center ${isActive ? 'flex' : 'hidden'}`}>
       <AuroraBackground theme={auroraTheme} />

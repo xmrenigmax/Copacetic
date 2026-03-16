@@ -45,7 +45,7 @@ export default function Home() {
 
   const handleTabContextMenu = (x: number, y: number, tabId: number) => {
     openContextMenu(x, y, [
-      { id: 'close', label: 'Close Tab', action: () => handleCloseTab(tabId) }
+      { id: 'close', label: 'Close Tab', action: () => handleCloseTab(tabId) },
     ]);
   };
 
@@ -134,7 +134,7 @@ export default function Home() {
                 onUpdateTitle={handleUpdateTabTitle}
                 onUpdateUrl={handleUpdateTabUrl}
                 auroraTheme={auroraTheme}
-                onContextMenu={handleWebviewContextMenu}
+                openContextMenu={openContextMenu}
               />
             ))}
           </section>

@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import {
-  ContextMenuItem
-} from '@/hooks/useContextMenu';
+import { ContextMenuItem } from '@/hooks/useContextMenu';
 
 interface ContextMenuProps {
   isOpen: boolean;
@@ -12,16 +10,41 @@ interface ContextMenuProps {
 }
 
 export const ContextMenu = ({ isOpen, position, items, onClose }: ContextMenuProps) => {
+  const [adjustedPos, setAdjustedPos] = useState(position);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Calculate bounds so the menu never squishes off-screen
+      const menuWidth = 220;
+      const menuHeight = items.length * 35 + 10;
+      let newX = position.x;
+      let newY = position.y;
+
+      if (newX + menuWidth > window.innerWidth) newX = window.innerWidth - menuWidth - 10;
+      if (newY + menuHeight > window.innerHeight) newY = window.innerHeight - menuHeight - 10;
+
+      setAdjustedPos({ x: newX, y: newY });
+    }
+  }, [isOpen, position, items]);
+
   if (!isOpen || _.isEmpty(items)) return null;
 
   return (
-    <div className="fixed z-9999 bg-secondary border border-white/10 shadow-2xl rounded-xl py-1.5 min-w-[200px] bdT" style={{ top: position.y, left: position.x }} onClick={(event) => event.stopPropagation()}>
+    <div
+      className="fixed z-99999 bg-[#0f0f0f]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-xl py-1.5 min-w-[200px]"
+      style={{ top: `${adjustedPos.y}px`, left: `${adjustedPos.x}px` }}
+      onClick={(event) => event.stopPropagation()}
+    >
       {items.map((item, index) => {
         if (item.isDivider) {
           return <div key={`divider-${index}`} className="h-px bg-white/10 my-1 w-full" />;
         }
         return (
-          <button key={item.id} onClick={() => { item.action(); onClose(); }} className="w-full text-left px-4 py-1.5 text-xs text-white/80 hover:bg-white/10 hover:text-white transition-colors tracking-wide">
+          <button
+            key={item.id}
+            onClick={() => { item.action(); onClose(); }}
+            className="w-full text-left px-4 py-2 text-xs font-medium text-white/80 hover:bg-blue-600 hover:text-white transition-colors tracking-wide"
+          >
             {item.label}
           </button>
         );
