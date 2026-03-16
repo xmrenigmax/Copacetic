@@ -10,6 +10,7 @@ export interface HistoryItem {
   url: string;
   title: string;
   timestamp: number;
+  type?: 'page' | 'download';
 }
 
 const HISTORY_KEY = 'copacetic_history';
@@ -38,20 +39,18 @@ export const useHistory = () => {
     setIsInitialized(true);
   }, []);
 
-  // Auto-save whenever history changes
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
     }
   }, [ history, isInitialized ]);
 
-  const addHistoryItem = useCallback((url: string, title: string) => {
+  const addHistoryItem = useCallback((url: string, title: string, type: 'page' | 'download' = 'page') => {
     setHistory((prev) => {
       const existingIndex = prev.findIndex((item) => item.url === url);
 
       if (existingIndex !== -1) {
         const existingItem = prev[existingIndex];
-
         if (Date.now() - existingItem.timestamp < 10000) {
           const newHistory = [...prev];
           newHistory[existingIndex] = {
@@ -69,8 +68,7 @@ export const useHistory = () => {
         ];
       }
 
-      // Brand new unique URL, add it to the top
-      return [ { id: Date.now(), url, title, timestamp: Date.now() }, ...prev ];
+      return [ { id: Date.now(), url, title, timestamp: Date.now(), type }, ...prev ];
     });
   }, []);
 

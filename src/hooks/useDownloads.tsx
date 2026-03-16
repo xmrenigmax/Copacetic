@@ -10,9 +10,10 @@ export interface DownloadItem {
   filename: string;
   progress: number;
   state: 'downloading' | 'completed' | 'interrupted';
+  url?: string;
 }
 
-export const useDownloads = () => {
+export const useDownloads = (onDownloadComplete?: (filename: string, url: string) => void) => {
   const [
     downloads,
     setDownloads
@@ -25,17 +26,24 @@ export const useDownloads = () => {
     });
   }, []);
 
-  const updateDownloadProgress = useCallback((id: string, progress: number, state: DownloadItem['state']) => {
-    setDownloads((prev) => prev.map((d) => d.id === id ? { ...d, progress, state } : d));
-  }, []);
+  const updateDownloadProgress = useCallback((id: string, progress: number, state: DownloadItem['state'], url?: string) => {
+    setDownloads((prev) => {
+      const existing = prev.find(d => d.id === id);
+
+      // Fire the history callback if it just finished downloading!
+      if (existing && existing.state !== 'completed' && state === 'completed' && onDownloadComplete && url) {
+        onDownloadComplete(existing.filename, url);
+      }
+
+      return prev.map((d) => d.id === id ? { ...d, progress, state, url } : d);
+    });
+  }, [ onDownloadComplete ]);
 
   const clearCompletedDownloads = useCallback(() => {
     setDownloads((prev) => prev.filter((d) => d.state === 'downloading'));
   }, []);
 
-  // Listen for Electron IPC messages
   useEffect(() => {
-    // Safely check if we are running inside Electron with nodeIntegration enabled
     if (typeof window !== 'undefined' && window.require) {
       const { ipcRenderer } = window.require('electron');
 
@@ -43,8 +51,8 @@ export const useDownloads = () => {
         addDownload(data.id, data.filename);
       };
 
-      const handleProgress = (event: any, data: { id: string; progress: number; state: DownloadItem['state'] }) => {
-        updateDownloadProgress(data.id, data.progress, data.state);
+      const handleProgress = (event: any, data: { id: string; progress: number; state: DownloadItem['state']; url?: string }) => {
+        updateDownloadProgress(data.id, data.progress, data.state, data.url);
       };
 
       ipcRenderer.on('download-started', handleStarted);

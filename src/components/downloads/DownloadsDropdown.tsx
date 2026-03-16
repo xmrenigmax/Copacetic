@@ -52,7 +52,7 @@ export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps
                       {dl.filename}
                     </span>
                     {dl.state === 'completed' ? (
-                      <span className="text-[9px] text-green-400 tt-u tracking-widest font-semibold">Done</span>
+                      <svg className="w-4 h-4 text-green-400 drop-shadow-[0_0_6px_rgba(74,222,128,0.6)] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                     ) : dl.state === 'interrupted' ? (
                       <span className="text-[9px] text-red-400 tt-u tracking-widest font-semibold">Failed</span>
                     ) : (

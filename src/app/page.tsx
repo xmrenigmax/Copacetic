@@ -47,13 +47,16 @@ export default function Home() {
 
   useShortcuts(handleAddTab, handleCloseTab, activeTabId);
 
-
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
-  const { downloads, addDownload, updateDownloadProgress, clearCompletedDownloads } = useDownloads();
+  const { history, addHistoryItem, clearHistory } = useHistory();
+
+  const { downloads, addDownload, updateDownloadProgress, clearCompletedDownloads } = useDownloads((filename, url) => {
+    addHistoryItem(url, filename, 'download');
+  });
 
   const handleTabContextMenu = (x: number, y: number, tabId: number) => {
     const targetTab = tabs.find(t => t.id === tabId);
@@ -68,8 +71,6 @@ export default function Home() {
       { id: 'close', label: 'Close Tab', action: () => handleCloseTab(tabId) }
     ]);
   };
-
-  const { history, addHistoryItem, clearHistory } = useHistory();
 
   const handleWebviewContextMenu = (x: number, y: number, linkUrl: string | null) => {
     const menuItems = [];
@@ -115,14 +116,9 @@ export default function Home() {
         onClose={closeContextMenu}
       />
 
-      <DownloadManager
-        downloads={downloads}
-        onClear={clearCompletedDownloads}
-      />
-
       <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
         <div className={`flex relative z-10 overflow-hidden ${!isResizing ? 'transition-all duration-300 ease-in-out' : ''}`} style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}>
-        <Sidebar
+          <Sidebar
             isOpen={isSidebarOpen}
             isCustomised={isCustomised}
             activeUrl={activeTab?.url || ''}

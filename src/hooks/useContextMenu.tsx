@@ -35,8 +35,14 @@ export const useContextMenu = () => {
   useEffect(() => {
     if (isOpen) {
       const handleClick = () => closeContextMenu();
-      document.addEventListener('click', handleClick);
-      return () => document.removeEventListener('click', handleClick);
+
+      document.addEventListener('mousedown', handleClick);
+      window.addEventListener('blur', handleClick);
+
+      return () => {
+        document.removeEventListener('mousedown', handleClick);
+        window.removeEventListener('blur', handleClick);
+      };
     }
   }, [ isOpen, closeContextMenu ]);
 
