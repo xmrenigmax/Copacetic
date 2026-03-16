@@ -38,7 +38,18 @@ export const useBrowserLogic = () => {
     setIsResizing
   ] = useState(false);
 
+  const [
+    isSettingsOpen,
+    setIsSettingsOpen
+  ] = useState(false);
+
+  const [
+    auroraTheme,
+    setAuroraTheme
+  ] = useState('midnight');
+
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  const toggleSettings = () => setIsSettingsOpen((prev) => !prev);
 
   const handleNavigate = (url: string) => {
     setTabs((prevTabs) => prevTabs.map((tab) => tab.id === activeTabId ? { ...tab, url } : tab));
@@ -85,9 +96,13 @@ export const useBrowserLogic = () => {
     isCustomised,
     sidebarWidth,
     isResizing,
+    isSettingsOpen,
+    auroraTheme,
     setSidebarWidth,
     setIsResizing,
+    setAuroraTheme,
     toggleSidebar,
+    toggleSettings,
     handleNavigate,
     handleAddTab,
     handleCloseTab,

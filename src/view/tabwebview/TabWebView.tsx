@@ -1,6 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  useEffect,
+  useRef
+} from 'react';
 import _ from 'lodash';
-import { StartPageView } from '../startpage/StartPageView';
+import {
+  StartPageView
+} from '../startpage/StartPageView';
 
 interface Tab {
   id: number;
@@ -11,11 +16,12 @@ interface Tab {
 interface TabWebViewProps {
   tab: Tab;
   isActive: boolean;
+  auroraTheme: string;
   onUpdateTitle: (id: number, title: string) => void;
   onUpdateUrl: (id: number, url: string) => void;
 }
 
-export const TabWebView = ({ tab, isActive, onUpdateTitle, onUpdateUrl }: TabWebViewProps) => {
+export const TabWebView = ({ tab, isActive, auroraTheme, onUpdateTitle, onUpdateUrl }: TabWebViewProps) => {
   const webviewRef = useRef<any>(null);
 
   useEffect(() => {
@@ -37,11 +43,20 @@ export const TabWebView = ({ tab, isActive, onUpdateTitle, onUpdateUrl }: TabWeb
 
   if (tab.url === 'copacetic://newtab') {
     return (
-      <StartPageView isActive={isActive} onNavigate={(newUrl) => onUpdateUrl(tab.id, newUrl)} />
+      <StartPageView
+        isActive={isActive}
+        auroraTheme={auroraTheme}
+        onNavigate={(newUrl) => onUpdateUrl(tab.id, newUrl)}
+      />
     );
   }
 
   return (
-    <webview ref={webviewRef} src={tab.url} className={`w-full flex-1 ${isActive ? 'flex' : 'hidden'}`} allowpopups={"true" as any} />
+    <webview
+      ref={webviewRef}
+      src={tab.url}
+      className={`w-full flex-1 bg-white ${isActive ? 'flex' : 'hidden'}`}
+      allowpopups={"true" as any}
+    />
   );
 };

@@ -6,12 +6,14 @@ import { AddressBar } from '@/components/addressbar/AddressBar';
 import { TabBar } from '@/components/tabbar/TabBar';
 import { TabWebView } from '@/view/tabwebview/TabWebView';
 import { Sidebar } from '@/components/sidebar/Sidebar';
+import { SettingsModal } from '@/components/settings/SettingsModal';
 
 export default function Home() {
   const [
     isMounted,
     setIsMounted
   ] = useState(false);
+
   const {
     tabs,
     activeTabId,
@@ -20,9 +22,13 @@ export default function Home() {
     isCustomised,
     sidebarWidth,
     isResizing,
+    isSettingsOpen,
+    auroraTheme,
     setSidebarWidth,
     setIsResizing,
+    setAuroraTheme,
     toggleSidebar,
+    toggleSettings,
     handleNavigate,
     handleAddTab,
     handleCloseTab,
@@ -54,27 +60,40 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
-      <div className={`flex relative z-10 overflow-hidden ${!isResizing ? 'transition-all duration-300 ease-in-out' : ''}`} style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}>
-        <Sidebar isOpen={isSidebarOpen} isCustomised={isCustomised} activeUrl={activeTab?.url || ''} />
-        {isSidebarOpen && (
-          <div className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500/50 transition-colors z-50" onMouseDown={handleMouseDown} />
-        )}
+    <>
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={toggleSettings}
+        currentTheme={auroraTheme}
+        onSelectTheme={setAuroraTheme}
+      />
+      <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
+        <div className={`flex relative z-10 overflow-hidden ${!isResizing ? 'transition-all duration-300 ease-in-out' : ''}`} style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}>
+          <Sidebar
+            isOpen={isSidebarOpen}
+            isCustomised={isCustomised}
+            activeUrl={activeTab?.url || ''}
+            onToggleSettings={toggleSettings}
+          />
+          {isSidebarOpen && (
+            <div className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500/50 transition-colors z-50" onMouseDown={handleMouseDown} />
+          )}
+        </div>
+        <main className="flex flex-col flex-1 overflow-hidden relative z-0">
+          {isResizing && <div className="absolute inset-0 z-50 cursor-col-resize" />}
+          <header className="bdB bg-primary pt-2">
+            <TabBar tabs={tabs} activeTabId={activeTabId} onTabClick={handleTabClick} onCloseTab={handleCloseTab} onAddTab={handleAddTab} onToggleSidebar={toggleSidebar} />
+            <div className="p-2">
+              <AddressBar url={activeTab?.url || ''} onNavigate={handleNavigate} />
+            </div>
+          </header>
+          <section className="flex-1 relative flex flex-col">
+            {isMounted && tabs.map((tab) => (
+              <TabWebView key={tab.id} tab={tab} isActive={activeTabId === tab.id} onUpdateTitle={handleUpdateTabTitle} onUpdateUrl={handleUpdateTabUrl} auroraTheme={auroraTheme} />
+            ))}
+          </section>
+        </main>
       </div>
-      <main className="flex flex-col flex-1 overflow-hidden relative z-0">
-        {isResizing && <div className="absolute inset-0 z-50 cursor-col-resize" />}
-        <header className="bdB bg-primary pt-2">
-          <TabBar tabs={tabs} activeTabId={activeTabId} onTabClick={handleTabClick} onCloseTab={handleCloseTab} onAddTab={handleAddTab} onToggleSidebar={toggleSidebar} />
-          <div className="p-2">
-            <AddressBar url={activeTab?.url || ''} onNavigate={handleNavigate} />
-          </div>
-        </header>
-        <section className="flex-1 relative flex flex-col">
-          {isMounted && tabs.map((tab) => (
-            <TabWebView key={tab.id} tab={tab} isActive={activeTabId === tab.id} onUpdateTitle={handleUpdateTabTitle} onUpdateUrl={handleUpdateTabUrl} />
-          ))}
-        </section>
-      </main>
-    </div>
+    </>
   );
 };

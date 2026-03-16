@@ -4,10 +4,11 @@ import { AuroraBackground } from '@/components/background/AuroraBackground';
 
 interface StartPageViewProps {
   isActive: boolean;
+  auroraTheme: string;
   onNavigate: (url: string) => void;
 }
 
-export const StartPageView = ({ isActive, onNavigate }: StartPageViewProps) => {
+export const StartPageView = ({ isActive, auroraTheme, onNavigate }: StartPageViewProps) => {
   const [ inputUrl, setInputUrl ] = useState('');
   const [ time, setTime ] = useState('');
 
@@ -33,7 +34,7 @@ export const StartPageView = ({ isActive, onNavigate }: StartPageViewProps) => {
 
   return (
     <div className={`relative w-full h-full flex flex-col items-center justify-center ${isActive ? 'flex' : 'hidden'}`}>
-      <AuroraBackground />
+      <AuroraBackground theme={auroraTheme} />
       <div className="flex flex-col items-center mb-10 z-10">
         <h1 className="text-7xl font-light text-white/90 tracking-tight mb-3 drop-shadow-md">
           { time }
