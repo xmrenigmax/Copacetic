@@ -15,6 +15,7 @@ import { useShortcuts } from '@/hooks/useShortcuts';
 import { useBookmarks } from '@/hooks/useBookmarks';
 import { useDownloads } from '@/hooks/useDownloads';
 import { DownloadManager } from '@/components/downloads/DownloadManager';
+import { DownloadsDropdown } from '@/components/downloads/DownloadsDropdown';
 
 export default function Home() {
   const [ isMounted, setIsMounted ] = useState(false);
@@ -150,8 +151,11 @@ export default function Home() {
                 onTabContextMenu={handleTabContextMenu}
               />
             </div>
-            <div className="w-80 shrink-0">
-              <AddressBar url={activeTab?.url || ''} onNavigate={handleNavigate} />
+            <div className="flex shrink-0 items-center gap-2">
+              <div className="w-80">
+                <AddressBar url={activeTab?.url || ''} onNavigate={handleNavigate} />
+              </div>
+              <DownloadsDropdown downloads={downloads} onClear={clearCompletedDownloads} />
             </div>
           </header>
 
