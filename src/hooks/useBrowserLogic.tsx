@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 
 export const useBrowserLogic = () => {
@@ -12,41 +12,74 @@ export const useBrowserLogic = () => {
       title: 'Start Page'
     }
   ]);
-
   const [
     activeTabId,
     setActiveTabId
   ] = useState(1);
-
   const [
     isSidebarOpen,
     setIsSidebarOpen
   ] = useState(false);
-
   const [
     isCustomised,
     setIsCustomised
   ] = useState(true);
-
   const [
     sidebarWidth,
     setSidebarWidth
   ] = useState(320);
-
   const [
     isResizing,
     setIsResizing
   ] = useState(false);
-
   const [
     isSettingsOpen,
     setIsSettingsOpen
   ] = useState(false);
-
   const [
     auroraTheme,
     setAuroraTheme
   ] = useState('midnight');
+
+  const [
+    isInitialized,
+    setIsInitialized
+  ] = useState(false);
+
+  // 1. Load Data on Boot
+  useEffect(() => {
+    const storedTabs = localStorage.getItem('copacetic_tabs');
+    const storedActiveTabId = localStorage.getItem('copacetic_active_tab');
+    const storedTheme = localStorage.getItem('copacetic_theme');
+
+    if (!_.isNull(storedTabs)) {
+      try {
+        const parsedTabs = JSON.parse(storedTabs);
+        if (!_.isEmpty(parsedTabs)) {
+          setTabs(parsedTabs);
+        }
+      } catch (e) {}
+    }
+
+    if (!_.isNull(storedActiveTabId)) {
+      setActiveTabId(Number(storedActiveTabId));
+    }
+
+    if (!_.isNull(storedTheme)) {
+      setAuroraTheme(storedTheme);
+    }
+
+    setIsInitialized(true);
+  }, []);
+
+  // 2. Auto-save Engine
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem('copacetic_tabs', JSON.stringify(tabs));
+      localStorage.setItem('copacetic_active_tab', activeTabId.toString());
+      localStorage.setItem('copacetic_theme', auroraTheme);
+    }
+  }, [ tabs, activeTabId, auroraTheme, isInitialized ]);
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
   const toggleSettings = () => setIsSettingsOpen((prev) => !prev);
