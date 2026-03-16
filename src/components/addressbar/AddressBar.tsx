@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+  useState
+} from 'react';
 import _ from 'lodash';
 
 interface AddressBarProps {
@@ -7,13 +9,18 @@ interface AddressBarProps {
 }
 
 export const AddressBar = ({ url, onNavigate }: AddressBarProps) => {
-  const [ inputUrl, setInputUrl ] = useState(url);
+  const [
+    inputUrl,
+    setInputUrl
+  ] = useState(url);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!_.isNull(inputUrl) && !_.isEmpty(inputUrl)) {
-      let parsedUrl = inputUrl;
-      if (!parsedUrl.startsWith('http://') && !parsedUrl.startsWith('https://')) {
+      let parsedUrl = inputUrl.trim();
+      if (_.includes(parsedUrl, ' ') || !_.includes(parsedUrl, '.')) {
+        parsedUrl = `https://www.google.com/search?q=${encodeURIComponent(parsedUrl)}`;
+      } else if (!parsedUrl.startsWith('http://') && !parsedUrl.startsWith('https://')) {
         parsedUrl = `https://${parsedUrl}`;
       }
       onNavigate(parsedUrl);

@@ -19,17 +19,26 @@ interface TabWebViewProps {
   auroraTheme: string;
   onUpdateTitle: (id: number, title: string) => void;
   onUpdateUrl: (id: number, url: string) => void;
+  onContextMenu: (x: number, y: number, linkUrl: string | null) => void;
 }
 
-export const TabWebView = ({ tab, isActive, auroraTheme, onUpdateTitle, onUpdateUrl }: TabWebViewProps) => {
+export const TabWebView = ({ tab, isActive, auroraTheme, onUpdateTitle, onUpdateUrl, onContextMenu }: TabWebViewProps) => {
   const webviewRef = useRef<any>(null);
 
   useEffect(() => {
     if (tab.url === 'copacetic://newtab') return;
     const webview = webviewRef.current;
+
     if (!_.isNull(webview)) {
       const handleTitleUpdate = (event: any) => onUpdateTitle(tab.id, event.title);
       const handleUrlUpdate = (event: any) => onUpdateUrl(tab.id, event.url);
+
+      const handleContextMenu = (event: any) => {
+        const { params } = event;
+        onContextMenu(params.x, params.y, params.linkURL || null);
+      };
+
+      webview.addEventListener('context-menu', handleContextMenu);
       webview.addEventListener('page-title-updated', handleTitleUpdate);
       webview.addEventListener('did-navigate', handleUrlUpdate);
       webview.addEventListener('did-navigate-in-page', handleUrlUpdate);
