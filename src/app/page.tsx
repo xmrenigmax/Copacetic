@@ -11,6 +11,8 @@ import { SettingsModal } from '@/components/settings/SettingsModal';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { ContextMenu } from '@/components/contextmenu/ContextMenu';
 import { useHistory } from '@/hooks/useHistory';
+import { useShortcuts } from '@/hooks/useShortcuts';
+import { useBookmarks } from '@/hooks/useBookmarks';
 
 export default function Home() {
   const [ isMounted, setIsMounted ] = useState(false);
@@ -40,13 +42,26 @@ export default function Home() {
 
   const { isContextOpen, contextPosition, contextItems, openContextMenu, closeContextMenu } = useContextMenu();
 
+  useShortcuts(handleAddTab, handleCloseTab, activeTabId);
+
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
+
   const handleTabContextMenu = (x: number, y: number, tabId: number) => {
+    const targetTab = tabs.find(t => t.id === tabId);
+
     openContextMenu(x, y, [
-      { id: 'close', label: 'Close Tab', action: () => handleCloseTab(tabId) },
+      { id: 'bookmark', label: 'Pin to Bookmarks', action: () => {
+        if (targetTab && !targetTab.url.startsWith('copacetic://')) {
+          addBookmark(targetTab.url, targetTab.title);
+        }
+      }},
+      { isDivider: true, id: 'div1', label: '', action: () => {} },
+      { id: 'close', label: 'Close Tab', action: () => handleCloseTab(tabId) }
     ]);
   };
 
@@ -99,13 +114,15 @@ export default function Home() {
 
       <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
         <div className={`flex relative z-10 overflow-hidden ${!isResizing ? 'transition-all duration-300 ease-in-out' : ''}`} style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}>
-          <Sidebar
+        <Sidebar
             isOpen={isSidebarOpen}
             isCustomised={isCustomised}
             activeUrl={activeTab?.url || ''}
             history={history}
+            bookmarks={bookmarks}
             onNavigate={handleNavigate}
             onClearHistory={clearHistory}
+            onRemoveBookmark={removeBookmark}
             onToggleSettings={toggleSettings}
           />
           {isSidebarOpen && (
@@ -142,6 +159,7 @@ export default function Home() {
                 auroraTheme={auroraTheme}
                 openContextMenu={openContextMenu}
                 onAddToHistory={addHistoryItem}
+                onAddBookmark={addBookmark}
               />
             ))}
           </section>

@@ -36,7 +36,14 @@ export const AddressBar = ({ url, onNavigate }: AddressBarProps) => {
       <div className="mr-2 text-white/30 tt-u text-[9px] tracking-widest font-semibold shrink-0">
         SECURE
       </div>
-      <input type="text" value={inputUrl} onChange={handleChange} className="w-full bg-transparent outline-none text-white/80 text-xs font-light tracking-wide placeholder-white/30" placeholder="Search or enter website..." />
+      <input
+        id="address-bar-input"
+        type="text"
+        value={inputUrl}
+        onChange={handleChange}
+        className="w-full bg-transparent outline-none text-white/80 text-xs font-light tracking-wide placeholder-white/30"
+        placeholder="Search or enter website..."
+      />
     </form>
   );
 };

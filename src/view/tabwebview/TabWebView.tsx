@@ -28,9 +28,10 @@ interface TabWebViewProps {
   onUpdateTitle: (id: number, title: string) => void;
   onUpdateUrl: (id: number, url: string) => void;
   onAddToHistory: (url: string, title: string) => void;
+  onAddBookmark: (url: string, title: string) => void;
 }
 
-export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpdateTitle, onUpdateUrl, onAddToHistory }: TabWebViewProps) => {
+export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpdateTitle, onUpdateUrl, onAddToHistory, onAddBookmark }: TabWebViewProps) => {
   const webviewRef = useRef<any>(null);
 
   const [ isLoading, setIsLoading ] = useState(false);
@@ -92,6 +93,7 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
         }
 
         menuItems.push({ id: 'reload', label: 'Reload Page', action: () => webview.reload() });
+        menuItems.push({ id: 'bookmark', label: 'Bookmark Page', action: () => onAddBookmark(tab.url, tab.title) });
         menuItems.push({ isDivider: true, id: 'div1', label: '', action: () => {} });
 
         if (!_.isNull(params.linkURL) && !_.isEmpty(params.linkURL)) {
