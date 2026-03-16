@@ -69,7 +69,7 @@ export default function Home() {
             <AddressBar url={activeTab?.url || ''} onNavigate={handleNavigate} />
           </div>
         </header>
-        <section className="flex-1 relative bg-white flex flex-col">
+        <section className="flex-1 relative flex flex-col">
           {isMounted && tabs.map((tab) => (
             <TabWebView key={tab.id} tab={tab} isActive={activeTabId === tab.id} onUpdateTitle={handleUpdateTabTitle} onUpdateUrl={handleUpdateTabUrl} />
           ))}

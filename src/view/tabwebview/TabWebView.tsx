@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import _ from 'lodash';
-import { StartPage } from '../startpage/StartPageView';
+import { StartPageView } from '../startpage/StartPageView';
 
 interface Tab {
   id: number;
@@ -37,11 +37,11 @@ export const TabWebView = ({ tab, isActive, onUpdateTitle, onUpdateUrl }: TabWeb
 
   if (tab.url === 'copacetic://newtab') {
     return (
-      <StartPage isActive={isActive} onNavigate={(newUrl) => onUpdateUrl(tab.id, newUrl)} />
+      <StartPageView isActive={isActive} onNavigate={(newUrl) => onUpdateUrl(tab.id, newUrl)} />
     );
   }
 
   return (
-    <webview ref={webviewRef} src={tab.url} className={`w-full flex-1 bg-white ${isActive ? 'flex' : 'hidden'}`} allowpopups={"true" as any} />
+    <webview ref={webviewRef} src={tab.url} className={`w-full flex-1 ${isActive ? 'flex' : 'hidden'}`} allowpopups={"true" as any} />
   );
 };

@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary: rgba(15, 0, 0, 0.4);
-  --color-secondary: rgba(0, 0, 0, 0.7);
+  --color-primary: rgba(255, 255, 255, 0.03);
+  --color-secondary: rgba(255, 255, 255, 0.08);
 }
 
 @layer utilities {
@@ -23,6 +23,7 @@ body {
   height: 100vh;
   background-size: 400% 400%;
   animation: meshGradient 20s ease-in-out infinite;
+  background-color: #000000;
 }
 
 @keyframes meshGradient {

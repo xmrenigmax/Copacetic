@@ -1,23 +1,15 @@
-import React, {
-  useState,
-  useEffect
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
+import { AuroraBackground } from '@/components/background/AuroraBackground';
 
-interface StartPageProps {
+interface StartPageViewProps {
   isActive: boolean;
   onNavigate: (url: string) => void;
 }
 
-export const StartPage = ({ isActive, onNavigate }: StartPageProps) => {
-  const [
-    inputUrl,
-    setInputUrl
-  ] = useState('');
-  const [
-    time,
-    setTime
-  ] = useState('');
+export const StartPageView = ({ isActive, onNavigate }: StartPageViewProps) => {
+  const [ inputUrl, setInputUrl ] = useState('');
+  const [ time, setTime ] = useState('');
 
   useEffect(() => {
     const updateClock = () => {
@@ -30,7 +22,7 @@ export const StartPage = ({ isActive, onNavigate }: StartPageProps) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!_.isNull(inputUrl) && !_.isEmpty(inputUrl)) {
+    if (!_.isEmpty(inputUrl)) {
       let parsedUrl = inputUrl;
       if (!parsedUrl.startsWith('http://') && !parsedUrl.startsWith('https://')) {
         parsedUrl = `https://${parsedUrl}`;
@@ -40,17 +32,18 @@ export const StartPage = ({ isActive, onNavigate }: StartPageProps) => {
   };
 
   return (
-    <div className={`w-full h-full flex flex-col items-center justify-center bg-transparent ${isActive ? 'flex' : 'hidden'}`}>
-      <div className="flex flex-col items-center mb-12 bg-primary rounded-[3rem] p-12 shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-red-500/5 bdT">
-        <h1 className="text-8xl font-extralight text-gray-200 tracking-tighter mb-4 drop-shadow-lg">
+    <div className={`relative w-full h-full flex flex-col items-center justify-center ${isActive ? 'flex' : 'hidden'}`}>
+      <AuroraBackground />
+      <div className="flex flex-col items-center mb-10 z-10">
+        <h1 className="text-7xl font-light text-white/90 tracking-tight mb-3 drop-shadow-md">
           { time }
         </h1>
-        <p className="text-[10px] text-red-400/50 tt-u tracking-[0.3em] font-medium">
+        <p className="text-xs text-white/40 tt-u tracking-[0.4em] font-medium">
           Copacetic
         </p>
       </div>
-      <form onSubmit={handleSubmit} className="w-full max-w-xl bg-primary rounded-full px-8 py-5 shadow-2xl border border-red-500/5 bdT transition-all duration-300 hover:scale-[1.02] hover:bg-white/5 focus-within:bg-white/5 focus-within:scale-[1.02] focus-within:border-red-500/10">
-        <input type="text" value={inputUrl} onChange={(e) => setInputUrl(e.target.value)} className="w-full bg-transparent outline-none text-gray-300 text-lg font-light placeholder-gray-600 text-center tracking-wide" placeholder="Search the web or enter a URL..." autoFocus />
+      <form onSubmit={handleSubmit} className="z-10 w-full max-w-2xl bg-primary rounded-full px-6 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 hover:bg-white/5 focus-within:bg-white/10 focus-within:border-white/20 focus-within:shadow-[0_8px_40px_rgba(255,255,255,0.05)]">
+        <input type="text" value={inputUrl} onChange={(e) => setInputUrl(e.target.value)} className="w-full bg-transparent outline-none text-white/80 text-lg font-light placeholder-white/30 text-center tracking-wide" placeholder="Search the web or enter a URL..." autoFocus />
       </form>
     </div>
   );
