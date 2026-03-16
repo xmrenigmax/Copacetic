@@ -1,22 +1,29 @@
+
 import React, { useState } from 'react';
 import { FilePanel } from './panel/FilePanel';
 import { AIPanel } from './panel/AIPanel';
+import { HistoryPanel } from './panel/HistoryPanel';
+import { HistoryItem } from '@/hooks/useHistory';
 
 interface SidebarProps {
   isOpen: boolean;
   isCustomised: boolean;
   activeUrl: string;
+  history: HistoryItem[];
+  onNavigate: (url: string) => void;
+  onClearHistory: () => void;
   onToggleSettings: () => void;
 }
 
-export const Sidebar = ({ isOpen, isCustomised, activeUrl, onToggleSettings }: SidebarProps) => {
+export const Sidebar = ({ isOpen, isCustomised, activeUrl, history, onNavigate, onClearHistory, onToggleSettings }: SidebarProps) => {
   const [ activePanel, setActivePanel ] = useState('file');
 
   const navItems = [
     { id: 'ai', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>, label: 'Copilot' },
     { id: 'globe', icon: <img src="/globe.svg" alt="Web" className="w-5 h-5 invert" />, label: 'Web' },
     { id: 'file', icon: <img src="/file.svg" alt="Files" className="w-5 h-5 invert" />, label: 'Files' },
-    { id: 'window', icon: <img src="/window.svg" alt="Tabs" className="w-5 h-5 invert" />, label: 'Tabs' }
+    { id: 'window', icon: <img src="/window.svg" alt="Tabs" className="w-5 h-5 invert" />, label: 'Tabs' },
+    { id: 'history', icon: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, label: 'History' }
   ];
 
   return (
@@ -37,6 +44,7 @@ export const Sidebar = ({ isOpen, isCustomised, activeUrl, onToggleSettings }: S
       <div className="flex-1 flex flex-col bg-transparent overflow-hidden">
         {activePanel === 'file' && <FilePanel activeUrl={activeUrl} />}
         {activePanel === 'ai' && <AIPanel />}
+        {activePanel === 'history' && <HistoryPanel history={history} onNavigate={onNavigate} onClearHistory={onClearHistory} />}
       </div>
     </div>
   );

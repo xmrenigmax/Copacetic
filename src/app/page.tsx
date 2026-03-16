@@ -10,6 +10,7 @@ import { Sidebar } from '@/components/sidebar/Sidebar';
 import { SettingsModal } from '@/components/settings/SettingsModal';
 import { useContextMenu } from '@/hooks/useContextMenu';
 import { ContextMenu } from '@/components/contextmenu/ContextMenu';
+import { useHistory } from '@/hooks/useHistory';
 
 export default function Home() {
   const [ isMounted, setIsMounted ] = useState(false);
@@ -48,6 +49,8 @@ export default function Home() {
       { id: 'close', label: 'Close Tab', action: () => handleCloseTab(tabId) },
     ]);
   };
+
+  const { history, addHistoryItem, clearHistory } = useHistory();
 
   const handleWebviewContextMenu = (x: number, y: number, linkUrl: string | null) => {
     const menuItems = [];
@@ -100,6 +103,9 @@ export default function Home() {
             isOpen={isSidebarOpen}
             isCustomised={isCustomised}
             activeUrl={activeTab?.url || ''}
+            history={history}
+            onNavigate={handleNavigate}
+            onClearHistory={clearHistory}
             onToggleSettings={toggleSettings}
           />
           {isSidebarOpen && (
@@ -135,6 +141,7 @@ export default function Home() {
                 onUpdateUrl={handleUpdateTabUrl}
                 auroraTheme={auroraTheme}
                 openContextMenu={openContextMenu}
+                onAddToHistory={addHistoryItem}
               />
             ))}
           </section>
