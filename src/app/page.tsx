@@ -13,6 +13,8 @@ import { ContextMenu } from '@/components/contextmenu/ContextMenu';
 import { useHistory } from '@/hooks/useHistory';
 import { useShortcuts } from '@/hooks/useShortcuts';
 import { useBookmarks } from '@/hooks/useBookmarks';
+import { useDownloads } from '@/hooks/useDownloads';
+import { DownloadManager } from '@/components/downloads/DownloadManager';
 
 export default function Home() {
   const [ isMounted, setIsMounted ] = useState(false);
@@ -50,6 +52,7 @@ export default function Home() {
   }, []);
 
   const { bookmarks, addBookmark, removeBookmark } = useBookmarks();
+  const { downloads, addDownload, updateDownloadProgress, clearCompletedDownloads } = useDownloads();
 
   const handleTabContextMenu = (x: number, y: number, tabId: number) => {
     const targetTab = tabs.find(t => t.id === tabId);
@@ -104,12 +107,16 @@ export default function Home() {
         onSelectTheme={setAuroraTheme}
       />
 
-      {/* 1. Added the Context Menu Component */}
       <ContextMenu
         isOpen={isContextOpen}
         position={contextPosition}
         items={contextItems}
         onClose={closeContextMenu}
+      />
+
+      <DownloadManager
+        downloads={downloads}
+        onClear={clearCompletedDownloads}
       />
 
       <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
