@@ -10,11 +10,19 @@
 }
 
 @layer utilities {
-  .bg-primary { background-color: var(--color-primary); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); }
-  .bg-secondary { background-color: var(--color-secondary); backdrop-filter: blur(48px); -webkit-backdrop-filter: blur(48px); }
-  .bdT { border-top: 1px solid rgba(255, 100, 100, 0.05); }
-  .bdR { border-right: 1px solid rgba(255, 100, 100, 0.05); }
-  .bdB { border-bottom: 1px solid rgba(255, 100, 100, 0.05); }
+  .bg-primary {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(40px) !important;
+    -webkit-backdrop-filter: blur(40px) !important;
+  }
+  .bg-secondary {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(60px) !important;
+    -webkit-backdrop-filter: blur(60px) !important;
+  }
+  .bdT { border-top: 1px solid rgba(255, 255, 255, 0.1) !important; }
+  .bdR { border-right: 1px solid rgba(255, 255, 255, 0.1) !important; }
+  .bdB { border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; }
   .tt-u { text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; }
 }
 
@@ -148,7 +156,7 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-white;
   }
   html {
     @apply font-sans;
