@@ -8,15 +8,14 @@ interface DownloadsDropdownProps {
 }
 
 export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps) => {
-  const [
-    isOpen,
-    setIsOpen
-  ] = useState(false);
+  const [ isOpen, setIsOpen ] = useState(false);
 
-  if (_.isEmpty(downloads)) return null;
+  if (_.isEmpty(downloads)) {
+    return null;
+  }
 
-  const activeDownloads = downloads.filter((d) => d.state === 'downloading').length;
-  const hasCompleted = downloads.some((d) => d.state !== 'downloading');
+  const activeDownloads = downloads.filter(d => d.state === 'downloading').length;
+  const hasCompleted = downloads.some(d => d.state !== 'downloading');
 
   return (
     <div className="relative flex items-center">
@@ -29,7 +28,6 @@ export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps
           </span>
         )}
       </button>
-
       {isOpen && (
         <>
           <div className="fixed inset-0 z-90" onClick={() => setIsOpen(false)} />
@@ -45,7 +43,7 @@ export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps
               )}
             </div>
             <div className="max-h-72 overflow-y-auto no-scrollbar flex flex-col gap-2">
-              {downloads.map((dl) => (
+              {downloads.map(dl => (
                 <div key={dl.id} className="bg-white/5 border border-white/5 rounded-xl p-3 flex flex-col gap-2 relative overflow-hidden group">
                   <div className="flex justify-between items-center relative z-10">
                     <span className="text-xs font-medium text-white/90 truncate pr-3 tracking-wide" title={dl.filename}>

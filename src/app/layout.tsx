@@ -3,16 +3,15 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Copacetic Browser",
-  description: "A sleek, glassmorphic workspace.",
+  description: "A sleek, glassmorphic workspace."
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-
     <html lang="en" className="dark">
       <body className="bg-black text-white antialiased">
         {children}

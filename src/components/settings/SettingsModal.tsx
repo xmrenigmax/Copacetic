@@ -1,3 +1,4 @@
+import React from 'react';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -7,7 +8,9 @@ interface SettingsModalProps {
 }
 
 export const SettingsModal = ({ isOpen, onClose, currentTheme, onSelectTheme }: SettingsModalProps) => {
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   const themes = [
     { id: 'midnight', label: 'Midnight Blue' },
@@ -30,7 +33,7 @@ export const SettingsModal = ({ isOpen, onClose, currentTheme, onSelectTheme }: 
             Aurora Theme
           </label>
           <div className="grid grid-cols-2 gap-3">
-            {themes.map((theme) => (
+            {themes.map(theme => (
               <button key={theme.id} onClick={() => onSelectTheme(theme.id)} className={`py-3 px-4 rounded-2xl border transition-all duration-300 text-sm font-light tracking-wide ${currentTheme === theme.id ? 'bg-white/10 border-white/30 text-white shadow-inner scale-[0.98]' : 'bg-primary border-transparent text-white/50 hover:bg-white/5 hover:text-white/80'}`}>
                 {theme.label}
               </button>

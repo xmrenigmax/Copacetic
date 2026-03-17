@@ -16,8 +16,10 @@ export const StartPageView = ({ isActive, auroraTheme, onNavigate }: StartPageVi
     const updateClock = () => {
       setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     };
+
     updateClock();
     const intervalId = setInterval(updateClock, 1000);
+
     return () => clearInterval(intervalId);
   }, []);
 
@@ -33,6 +35,7 @@ export const StartPageView = ({ isActive, auroraTheme, onNavigate }: StartPageVi
       onNavigate(parsedUrl);
     }
   };
+
   return (
     <div className={`relative w-full h-full flex flex-col items-center justify-center ${isActive ? 'flex' : 'hidden'}`}>
       <AuroraBackground theme={auroraTheme} />
@@ -45,7 +48,7 @@ export const StartPageView = ({ isActive, auroraTheme, onNavigate }: StartPageVi
         </p>
       </div>
       <form onSubmit={handleSubmit} className="z-10 w-full max-w-2xl bg-primary rounded-full px-6 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/10 transition-all duration-500 hover:bg-white/5 focus-within:bg-white/10 focus-within:border-white/20 focus-within:shadow-[0_8px_40px_rgba(255,255,255,0.05)]">
-        <input type="text" value={inputUrl} onChange={(e) => setInputUrl(e.target.value)} className="w-full bg-transparent outline-none text-white/80 text-lg font-light placeholder-white/30 text-center tracking-wide" placeholder="Search the web or enter a URL..." autoFocus />
+        <input type="text" value={inputUrl} onChange={e => setInputUrl(e.target.value)} className="w-full bg-transparent outline-none text-white/80 text-lg font-light placeholder-white/30 text-center tracking-wide" placeholder="Search the web or enter a URL..." autoFocus />
       </form>
     </div>
   );

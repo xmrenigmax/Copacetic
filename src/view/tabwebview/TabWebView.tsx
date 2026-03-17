@@ -23,8 +23,8 @@ interface TabWebViewProps {
 
 export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpdateTitle, onUpdateUrl, onAddToHistory, onAddBookmark }: TabWebViewProps) => {
   const webviewRef = useRef<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorData, setErrorData] = useState<{ code: string; description: string; url: string } | null>(null);
+  const [ isLoading, setIsLoading ] = useState(false);
+  const [ errorData, setErrorData ] = useState<{ code: string; description: string; url: string } | null>(null);
 
   useEffect(() => {
     if (tab.url === 'copacetic://newtab') {
@@ -70,9 +70,11 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
         if (webview.canGoBack()) {
           menuItems.push({ id: 'back', label: 'Go Back', action: () => webview.goBack() });
         }
+
         if (webview.canGoForward()) {
           menuItems.push({ id: 'forward', label: 'Go Forward', action: () => webview.goForward() });
         }
+
         menuItems.push({ id: 'reload', label: 'Reload Page', action: () => webview.reload() });
         menuItems.push({ id: 'bookmark', label: 'Bookmark Page', action: () => onAddBookmark(tab.url, tab.title) });
         menuItems.push({ isDivider: true, id: 'div1', label: '', action: () => {} });
@@ -140,7 +142,7 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
         <div className="absolute top-0 left-0 w-full h-[2px] bg-linear-to-r from-transparent via-blue-500/80 to-transparent animate-pulse z-50 pointer-events-none" />
       )}
       {tab.url === 'copacetic://newtab' ? (
-        <StartPageView isActive={isActive} auroraTheme={auroraTheme} onNavigate={(newUrl) => onUpdateUrl(tab.id, newUrl)} />
+        <StartPageView isActive={isActive} auroraTheme={auroraTheme} onNavigate={newUrl => onUpdateUrl(tab.id, newUrl)} />
       ) : !_.isNull(errorData) ? (
         <ErrorPageView isActive={isActive} errorCode={errorData.code} errorDescription={errorData.description} failedUrl={errorData.url} onRetry={handleRetry} />
       ) : (

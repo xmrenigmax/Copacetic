@@ -14,11 +14,7 @@ export const AuroraBackground = ({ theme }: AuroraBackgroundProps) => {
     monochrome: [ 'bg-gray-600/30', 'bg-gray-500/20', 'bg-gray-800/40' ]
   };
 
-  const [
-    color1,
-    color2,
-    color3
-  ] = themes[theme] || themes.midnight;
+  const [ color1, color2, color3 ] = themes[theme] || themes.midnight;
 
   return (
     <div className="absolute inset-0 overflow-hidden z-[-1] pointer-events-none bg-black">

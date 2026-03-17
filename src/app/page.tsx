@@ -40,7 +40,7 @@ export default function Home() {
     handleCloseTab,
     handleTabClick,
     handleUpdateTabTitle,
-    handleUpdateTabUrl,
+    handleUpdateTabUrl
   } = useBrowserLogic();
 
   const { isContextOpen, contextPosition, contextItems, openContextMenu, closeContextMenu } = useContextMenu();
@@ -63,7 +63,7 @@ export default function Home() {
 
     openContextMenu(x, y, [
       { id: 'bookmark', label: 'Pin to Bookmarks', action: () => {
-        if (targetTab && !targetTab.url.startsWith('copacetic://')) {
+        if (!_.isUndefined(targetTab) && !targetTab.url.startsWith('copacetic://')) {
           addBookmark(targetTab.url, targetTab.title);
         }
       }},
@@ -87,48 +87,29 @@ export default function Home() {
     setIsResizing(true);
     const startX = e.clientX;
     const startWidth = sidebarWidth;
+
     const onMouseMove = (moveEvent: MouseEvent) => {
       const newWidth = Math.max(240, Math.min(startWidth + (moveEvent.clientX - startX), 800));
       setSidebarWidth(newWidth);
     };
+
     const onMouseUp = () => {
       setIsResizing(false);
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
+
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   };
 
   return (
     <>
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={toggleSettings}
-        currentTheme={auroraTheme}
-        onSelectTheme={setAuroraTheme}
-      />
-
-      <ContextMenu
-        isOpen={isContextOpen}
-        position={contextPosition}
-        items={contextItems}
-        onClose={closeContextMenu}
-      />
-
+      <SettingsModal isOpen={isSettingsOpen} onClose={toggleSettings} currentTheme={auroraTheme} onSelectTheme={setAuroraTheme} />
+      <ContextMenu isOpen={isContextOpen} position={contextPosition} items={contextItems} onClose={closeContextMenu} />
       <div className="flex h-screen w-screen overflow-hidden bg-primary text-white">
         <div className={`flex relative z-10 overflow-hidden ${!isResizing ? 'transition-all duration-300 ease-in-out' : ''}`} style={{ width: isSidebarOpen ? `${sidebarWidth}px` : '0px' }}>
-          <Sidebar
-            isOpen={isSidebarOpen}
-            isCustomised={isCustomised}
-            activeUrl={activeTab?.url || ''}
-            history={history}
-            bookmarks={bookmarks}
-            onNavigate={handleNavigate}
-            onClearHistory={clearHistory}
-            onRemoveBookmark={removeBookmark}
-            onToggleSettings={toggleSettings}
-          />
+          <Sidebar isOpen={isSidebarOpen} isCustomised={isCustomised} activeUrl={activeTab?.url || ''} history={history} bookmarks={bookmarks} onNavigate={handleNavigate} onClearHistory={clearHistory} onRemoveBookmark={removeBookmark} onToggleSettings={toggleSettings} />
           {isSidebarOpen && (
             <div className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-blue-500/50 transition-colors z-50" onMouseDown={handleMouseDown} />
           )}
@@ -137,15 +118,7 @@ export default function Home() {
           {isResizing && <div className="absolute inset-0 z-50 cursor-col-resize" />}
           <header className="bdB bg-primary flex items-center px-3 py-2 z-20 shadow-sm">
             <div className="flex-1 flex items-center overflow-hidden pr-4">
-              <TabBar
-                tabs={tabs}
-                activeTabId={activeTabId}
-                onTabClick={handleTabClick}
-                onCloseTab={handleCloseTab}
-                onAddTab={handleAddTab}
-                onToggleSidebar={toggleSidebar}
-                onTabContextMenu={handleTabContextMenu}
-              />
+              <TabBar tabs={tabs} activeTabId={activeTabId} onTabClick={handleTabClick} onCloseTab={handleCloseTab} onAddTab={handleAddTab} onToggleSidebar={toggleSidebar} onTabContextMenu={handleTabContextMenu} />
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <div className="w-80">
@@ -154,20 +127,9 @@ export default function Home() {
               <DownloadsDropdown downloads={downloads} onClear={clearCompletedDownloads} />
             </div>
           </header>
-
           <section className="flex-1 relative flex flex-col">
-            {isMounted && tabs.map((tab) => (
-              <TabWebView
-                key={tab.id}
-                tab={tab}
-                isActive={activeTabId === tab.id}
-                onUpdateTitle={handleUpdateTabTitle}
-                onUpdateUrl={handleUpdateTabUrl}
-                auroraTheme={auroraTheme}
-                openContextMenu={openContextMenu}
-                onAddToHistory={addHistoryItem}
-                onAddBookmark={addBookmark}
-              />
+            {isMounted && tabs.map(tab => (
+              <TabWebView key={tab.id} tab={tab} isActive={activeTabId === tab.id} auroraTheme={auroraTheme} openContextMenu={openContextMenu} onUpdateTitle={handleUpdateTabTitle} onUpdateUrl={handleUpdateTabUrl} onAddToHistory={addHistoryItem} onAddBookmark={addBookmark} />
             ))}
           </section>
         </main>
