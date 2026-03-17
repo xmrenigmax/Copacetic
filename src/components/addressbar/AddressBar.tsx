@@ -1,6 +1,4 @@
-import React, {
-  useState
-} from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 
 interface AddressBarProps {
@@ -9,10 +7,7 @@ interface AddressBarProps {
 }
 
 export const AddressBar = ({ url, onNavigate }: AddressBarProps) => {
-  const [
-    inputUrl,
-    setInputUrl
-  ] = useState(url);
+  const [ inputUrl, setInputUrl ] = useState(url);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,7 +27,10 @@ export const AddressBar = ({ url, onNavigate }: AddressBarProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center w-full bg-black/20 rounded-md px-3 py-1.5 border border-white/5 shadow-inner transition-all focus-within:bg-black/40 focus-within:border-white/20">
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-center w-full bg-black/20 rounded-md px-3 py-1.5 border border-white/5 shadow-inner transition-all focus-within:bg-black/40 focus-within:border-white/20"
+    >
       <div className="mr-2 text-white/30 tt-u text-[9px] tracking-widest font-semibold shrink-0">
         SECURE
       </div>
