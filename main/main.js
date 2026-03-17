@@ -13,7 +13,9 @@ function createWindow() {
       webviewTag: true
     }
   });
+
   mainWindow.loadURL('http://localhost:3000');
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -21,6 +23,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
+
   app.on('activate', () => {
     if (_.isNull(mainWindow)) {
       createWindow();
@@ -36,14 +39,12 @@ app.on('window-all-closed', () => {
   }
 });
 
-// The crucial missing bridge that actually triggers the download!
 ipcMain.on('download-url', (event, url) => {
-  if (mainWindow) {
+  if (!_.isNull(mainWindow)) {
     mainWindow.webContents.downloadURL(url);
   }
 });
 
-// --- DOWNLOAD MANAGER BRIDGE ---
 app.on('web-contents-created', (event, contents) => {
   if (contents.getType() === 'webview') {
     contents.session.on('will-download', (event, item, webContents) => {
@@ -56,7 +57,9 @@ app.on('web-contents-created', (event, contents) => {
         if (state === 'interrupted') {
           mainWindow.webContents.send('download-progress', { id, progress: 0, state: 'interrupted' });
         } else if (state === 'progressing') {
-          if (item.isPaused()) return;
+          if (item.isPaused()) {
+            return;
+          }
           const progress = item.getReceivedBytes() / item.getTotalBytes();
           mainWindow.webContents.send('download-progress', { id, progress, state: 'downloading' });
         }
