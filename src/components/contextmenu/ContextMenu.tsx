@@ -22,6 +22,7 @@ export const ContextMenu = ({ isOpen, position, items, onClose }: ContextMenuPro
       if (newX + menuWidth > window.innerWidth) {
         newX = window.innerWidth - menuWidth - 10;
       }
+
       if (newY + menuHeight > window.innerHeight) {
         newY = window.innerHeight - menuHeight - 10;
       }
@@ -45,8 +46,8 @@ export const ContextMenu = ({ isOpen, position, items, onClose }: ContextMenuPro
 
   return (
     <>
-      <div className="fixed inset-0 z-99998" onContextMenu={e => { e.preventDefault(); onClose(); }} />
-      <div className="fixed z-99999 bg-[#0f0f0f]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-xl py-1.5 min-w-[200px]" style={{ top: `${adjustedPos.y}px`, left: `${adjustedPos.x}px` }} onMouseDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()} onContextMenu={e => e.stopPropagation()}>
+      <div className="fixed inset-0 z-[99998] bg-transparent" onClick={e => { e.stopPropagation(); onClose(); }} onMouseDown={e => { e.stopPropagation(); onClose(); }} onContextMenu={e => { e.preventDefault(); e.stopPropagation(); onClose(); }} />
+      <div className="fixed z-[99999] bg-[#0f0f0f]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-xl py-1.5 min-w-[200px]" style={{ top: `${adjustedPos.y}px`, left: `${adjustedPos.x}px` }} onMouseDown={e => e.stopPropagation()} onClick={e => e.stopPropagation()} onContextMenu={e => e.stopPropagation()}>
         {items.map((item, index) => {
           if (item.isDivider) {
             return <div key={`divider-${index}`} className="h-px bg-white/10 my-1 w-full" />;

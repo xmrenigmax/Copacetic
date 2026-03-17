@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
 import { DownloadItem } from '@/hooks/useDownloads';
+import { Download, Check } from 'lucide-react';
 
 interface DownloadsDropdownProps {
   downloads: DownloadItem[];
@@ -20,7 +21,7 @@ export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps
   return (
     <div className="relative flex items-center">
       <button onClick={() => setIsOpen(!isOpen)} className={`p-1.5 rounded-md transition-all duration-300 relative flex items-center justify-center ${isOpen ? 'bg-white/15 text-white' : 'bg-black/20 text-white/50 hover:bg-white/10 hover:text-white'} border border-white/5 shadow-inner`}>
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+        <Download size={16} />
         {activeDownloads > 0 && (
           <span className="absolute -bottom-1 -right-1 flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
@@ -30,8 +31,8 @@ export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps
       </button>
       {isOpen && (
         <>
-          <div className="fixed inset-0 z-[99998]" onClick={() => setIsOpen(false)} />
-          <div className="absolute top-full right-0 mt-3 w-80 bg-black border border-white/20 shadow-2xl rounded-xl p-4 z-[99999] flex flex-col gap-3">
+          <div className="fixed inset-0 z-[99998]" onClick={e => { e.stopPropagation(); setIsOpen(false); }} onMouseDown={e => { e.stopPropagation(); setIsOpen(false); }} />
+          <div className="absolute top-[calc(100%+8px)] right-0 w-80 bg-black border border-white/20 shadow-2xl rounded-xl p-4 z-[99999] flex flex-col gap-3">
             <div className="flex items-center justify-between px-1 mb-1">
               <span className="text-[10px] text-white/50 tt-u tracking-widest font-semibold">
                 Downloads
@@ -50,7 +51,7 @@ export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps
                       {dl.filename}
                     </span>
                     {dl.state === 'completed' ? (
-                      <svg className="w-4 h-4 text-green-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                      <Check size={16} className="text-green-400 shrink-0" strokeWidth={3} />
                     ) : dl.state === 'interrupted' ? (
                       <span className="text-[9px] text-red-400 tt-u tracking-widest font-semibold">Failed</span>
                     ) : (
