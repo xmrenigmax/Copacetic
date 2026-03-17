@@ -7,16 +7,8 @@ interface FilePanelProps {
 }
 
 export const FilePanel = ({ activeUrl }: FilePanelProps) => {
-  const {
-    snippets,
-    addSnippet,
-    removeSnippet
-  } = useScrapbook();
-
-  const [
-    isDragging,
-    setIsDragging
-  ] = useState(false);
+  const { snippets, addSnippet, removeSnippet } = useScrapbook();
+  const [ isDragging, setIsDragging ] = useState(false);
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -47,7 +39,7 @@ export const FilePanel = ({ activeUrl }: FilePanelProps) => {
             Drag and drop text here to save it.
           </div>
         ) : (
-          snippets.map((snippet) => (
+          snippets.map(snippet => (
             <div key={snippet.id} className="mb-3 p-3 bg-white/5 rounded-xl border border-white/5 shadow-sm backdrop-blur-md relative group">
               <p className="text-sm text-gray-200 wrap-break-words whitespace-pre-wrap leading-relaxed">
                 {snippet.text}

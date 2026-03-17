@@ -19,14 +19,13 @@ export const HistoryPanel = ({ history, onNavigate, onClearHistory }: HistoryPan
           Clear
         </button>
       </div>
-
       <div className="flex-1 overflow-y-auto pr-2 no-scrollbar space-y-2">
         {_.isEmpty(history) ? (
           <div className="text-xs text-white/30 text-center mt-10 font-light">
             No history yet.
           </div>
         ) : (
-          history.map((item) => (
+          history.map(item => (
             <div key={item.id} onClick={() => onNavigate(item.url)} className="p-3 bg-white/5 rounded-xl border border-white/5 shadow-sm hover:bg-white/10 transition-colors cursor-pointer group">
               <div className="flex items-center gap-2 mb-1">
                 {item.type === 'download' ? (

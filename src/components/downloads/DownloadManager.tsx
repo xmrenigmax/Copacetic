@@ -1,8 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import {
-  DownloadItem
-} from '@/hooks/useDownloads';
+import { DownloadItem } from '@/hooks/useDownloads';
 
 interface DownloadManagerProps {
   downloads: DownloadItem[];
@@ -10,13 +8,15 @@ interface DownloadManagerProps {
 }
 
 export const DownloadManager = ({ downloads, onClear }: DownloadManagerProps) => {
-  if (_.isEmpty(downloads)) return null;
+  if (_.isEmpty(downloads)) {
+    return null;
+  }
 
-  const hasCompleted = downloads.some((d) => d.state !== 'downloading');
+  const hasCompleted = downloads.some(d => d.state !== 'downloading');
 
   return (
     <div className="fixed bottom-6 right-6 z-9999 flex flex-col gap-3 max-w-sm w-full pointer-events-none">
-      {downloads.map((dl) => (
+      {downloads.map(dl => (
         <div key={dl.id} className="bg-[#0f0f0f]/95 backdrop-blur-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] rounded-2xl p-4 pointer-events-auto flex flex-col gap-3 transition-all duration-500">
           <div className="flex justify-between items-center">
             <span className="text-xs font-medium text-white/90 truncate pr-4 tracking-wide">
