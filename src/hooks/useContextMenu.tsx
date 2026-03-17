@@ -9,9 +9,9 @@ export interface ContextMenuItem {
 }
 
 export const useContextMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [items, setItems] = useState<ContextMenuItem[]>([]);
+  const [ isOpen, setIsOpen ] = useState(false);
+  const [ position, setPosition ] = useState({ x: 0, y: 0 });
+  const [ items, setItems ] = useState<ContextMenuItem[]>([]);
 
   const openContextMenu = useCallback((x: number, y: number, menuItems: ContextMenuItem[]) => {
     setPosition({ x, y });

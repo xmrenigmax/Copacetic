@@ -1,8 +1,4 @@
-import {
-  useState,
-  useCallback,
-  useEffect
-} from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import _ from 'lodash';
 
 export interface DownloadItem {
@@ -14,33 +10,31 @@ export interface DownloadItem {
 }
 
 export const useDownloads = (onDownloadComplete?: (filename: string, url: string) => void) => {
-  const [
-    downloads,
-    setDownloads
-  ] = useState<DownloadItem[]>([]);
+  const [ downloads, setDownloads ] = useState<DownloadItem[]>([]);
 
   const addDownload = useCallback((id: string, filename: string) => {
-    setDownloads((prev) => {
-      if (prev.some((d) => d.id === id)) return prev;
+    setDownloads(prev => {
+      if (prev.some(d => d.id === id)) {
+        return prev;
+      }
       return [ ...prev, { id, filename, progress: 0, state: 'downloading' } ];
     });
   }, []);
 
   const updateDownloadProgress = useCallback((id: string, progress: number, state: DownloadItem['state'], url?: string) => {
-    setDownloads((prev) => {
+    setDownloads(prev => {
       const existing = prev.find(d => d.id === id);
 
-      // Fire the history callback if it just finished downloading!
-      if (existing && existing.state !== 'completed' && state === 'completed' && onDownloadComplete && url) {
-        onDownloadComplete(existing.filename, url);
+      if (!_.isUndefined(existing) && existing.state !== 'completed' && state === 'completed' && !_.isUndefined(onDownloadComplete) && !_.isUndefined(url)) {
+        setTimeout(() => onDownloadComplete(existing.filename, url), 0);
       }
 
-      return prev.map((d) => d.id === id ? { ...d, progress, state, url } : d);
+      return prev.map(d => d.id === id ? { ...d, progress, state, url } : d);
     });
   }, [ onDownloadComplete ]);
 
   const clearCompletedDownloads = useCallback(() => {
-    setDownloads((prev) => prev.filter((d) => d.state === 'downloading'));
+    setDownloads(prev => prev.filter(d => d.state === 'downloading'));
   }, []);
 
   useEffect(() => {

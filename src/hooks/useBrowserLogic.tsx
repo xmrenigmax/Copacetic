@@ -2,51 +2,16 @@ import { useEffect, useState } from 'react';
 import _ from 'lodash';
 
 export const useBrowserLogic = () => {
-  const [
-    tabs,
-    setTabs
-  ] = useState([
-    {
-      id: 1,
-      url: 'copacetic://newtab',
-      title: 'Start Page'
-    }
-  ]);
-  const [
-    activeTabId,
-    setActiveTabId
-  ] = useState(1);
-  const [
-    isSidebarOpen,
-    setIsSidebarOpen
-  ] = useState(false);
-  const [
-    isCustomised,
-    setIsCustomised
-  ] = useState(true);
-  const [
-    sidebarWidth,
-    setSidebarWidth
-  ] = useState(320);
-  const [
-    isResizing,
-    setIsResizing
-  ] = useState(false);
-  const [
-    isSettingsOpen,
-    setIsSettingsOpen
-  ] = useState(false);
-  const [
-    auroraTheme,
-    setAuroraTheme
-  ] = useState('midnight');
+  const [ tabs, setTabs ] = useState([ { id: 1, url: 'copacetic://newtab', title: 'Start Page' } ]);
+  const [ activeTabId, setActiveTabId ] = useState(1);
+  const [ isSidebarOpen, setIsSidebarOpen ] = useState(false);
+  const [ isCustomised, setIsCustomised ] = useState(true);
+  const [ sidebarWidth, setSidebarWidth ] = useState(320);
+  const [ isResizing, setIsResizing ] = useState(false);
+  const [ isSettingsOpen, setIsSettingsOpen ] = useState(false);
+  const [ auroraTheme, setAuroraTheme ] = useState('midnight');
+  const [ isInitialized, setIsInitialized ] = useState(false);
 
-  const [
-    isInitialized,
-    setIsInitialized
-  ] = useState(false);
-
-  // 1. Load Data on Boot
   useEffect(() => {
     const storedTabs = localStorage.getItem('copacetic_tabs');
     const storedActiveTabId = localStorage.getItem('copacetic_active_tab');
@@ -58,7 +23,9 @@ export const useBrowserLogic = () => {
         if (!_.isEmpty(parsedTabs)) {
           setTabs(parsedTabs);
         }
-      } catch (e) {}
+      } catch(error) {
+        console.error(error);
+      }
     }
 
     if (!_.isNull(storedActiveTabId)) {
@@ -72,7 +39,6 @@ export const useBrowserLogic = () => {
     setIsInitialized(true);
   }, []);
 
-  // 2. Auto-save Engine
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem('copacetic_tabs', JSON.stringify(tabs));
@@ -81,45 +47,40 @@ export const useBrowserLogic = () => {
     }
   }, [ tabs, activeTabId, auroraTheme, isInitialized ]);
 
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
-  const toggleSettings = () => setIsSettingsOpen((prev) => !prev);
+  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
+  const toggleSettings = () => setIsSettingsOpen(prev => !prev);
 
   const handleNavigate = (url: string) => {
-    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === activeTabId ? { ...tab, url } : tab));
+    setTabs(prevTabs => prevTabs.map(tab => tab.id === activeTabId ? { ...tab, url } : tab));
   };
 
   const handleAddTab = () => {
     const newId = Date.now();
-    setTabs((prevTabs) => [
-      ...prevTabs,
-      { id: newId, url: 'copacetic://newtab', title: 'Start Page' }
-    ]);
+    setTabs(prevTabs => [ ...prevTabs, { id: newId, url: 'copacetic://newtab', title: 'Start Page' } ]);
     setActiveTabId(newId);
   };
 
   const handleCloseTab = (id: number) => {
-    setTabs((prevTabs) => prevTabs.filter((tab) => tab.id !== id));
+    setTabs(prevTabs => prevTabs.filter(tab => tab.id !== id));
     if (activeTabId === id && tabs.length > 1) {
-      const remainingTabs = tabs.filter((tab) => tab.id !== id);
+      const remainingTabs = tabs.filter(tab => tab.id !== id);
       if (!_.isEmpty(remainingTabs)) {
         setActiveTabId(remainingTabs[0].id);
       }
     }
   };
 
-  const handleTabClick = (id: number) => {
-    setActiveTabId(id);
-  };
+  const handleTabClick = (id: number) => setActiveTabId(id);
 
   const handleUpdateTabTitle = (id: number, title: string) => {
-    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? { ...tab, title } : tab));
+    setTabs(prevTabs => prevTabs.map(tab => tab.id === id ? { ...tab, title } : tab));
   };
 
   const handleUpdateTabUrl = (id: number, url: string) => {
-    setTabs((prevTabs) => prevTabs.map((tab) => tab.id === id ? { ...tab, url } : tab));
+    setTabs(prevTabs => prevTabs.map(tab => tab.id === id ? { ...tab, url } : tab));
   };
 
-  const activeTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
+  const activeTab = tabs.find(tab => tab.id === activeTabId) || tabs[0];
 
   return {
     tabs,

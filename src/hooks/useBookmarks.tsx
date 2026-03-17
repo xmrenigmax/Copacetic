@@ -10,17 +10,9 @@ export interface Bookmark {
 const BOOKMARKS_KEY = 'copacetic_bookmarks';
 
 export const useBookmarks = () => {
-  const [
-    bookmarks,
-    setBookmarks
-  ] = useState<Bookmark[]>([]);
+  const [ bookmarks, setBookmarks ] = useState<Bookmark[]>([]);
+  const [ isInitialized, setIsInitialized ] = useState(false);
 
-  const [
-    isInitialized,
-    setIsInitialized
-  ] = useState(false);
-
-  // Load from local storage on boot
   useEffect(() => {
     const storedBookmarks = localStorage.getItem(BOOKMARKS_KEY);
     if (!_.isNull(storedBookmarks)) {
@@ -29,14 +21,13 @@ export const useBookmarks = () => {
         if (!_.isEmpty(parsed)) {
           setBookmarks(parsed);
         }
-      } catch (error) {
+      } catch(error) {
         console.error('Failed to parse bookmarks:', error);
       }
     }
     setIsInitialized(true);
   }, []);
 
-  // Save to local storage whenever bookmarks change
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
@@ -44,9 +35,8 @@ export const useBookmarks = () => {
   }, [ bookmarks, isInitialized ]);
 
   const addBookmark = useCallback((url: string, title: string) => {
-    setBookmarks((prev) => {
-      // Prevent duplicate bookmarks
-      if (prev.some((b) => b.url === url)) {
+    setBookmarks(prev => {
+      if (prev.some(b => b.url === url)) {
         return prev;
       }
       return [ ...prev, { id: Date.now(), url, title } ];
@@ -54,7 +44,7 @@ export const useBookmarks = () => {
   }, []);
 
   const removeBookmark = useCallback((id: number) => {
-    setBookmarks((prev) => prev.filter((b) => b.id !== id));
+    setBookmarks(prev => prev.filter(b => b.id !== id));
   }, []);
 
   return {

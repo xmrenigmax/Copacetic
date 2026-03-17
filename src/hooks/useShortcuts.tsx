@@ -7,7 +7,6 @@ export const useShortcuts = (
 ) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-
       const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
       const modifier = isMac ? event.metaKey : event.ctrlKey;
 
