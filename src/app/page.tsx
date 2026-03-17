@@ -72,16 +72,6 @@ export default function Home() {
     ]);
   };
 
-  const handleWebviewContextMenu = (x: number, y: number, linkUrl: string | null) => {
-    const menuItems = [];
-    if (!_.isNull(linkUrl) && !_.isEmpty(linkUrl)) {
-      menuItems.push({ id: 'copy-link', label: 'Copy Link Address', action: () => navigator.clipboard.writeText(linkUrl) });
-    } else {
-      menuItems.push({ id: 'copy-url', label: 'Copy Page URL', action: () => navigator.clipboard.writeText(activeTab.url) });
-    }
-    openContextMenu(x, y, menuItems);
-  };
-
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsResizing(true);
@@ -118,16 +108,7 @@ export default function Home() {
           {isResizing && <div className="absolute inset-0 z-50 cursor-col-resize" />}
           <header className="bdB bg-primary flex items-center px-3 py-2 z-20 shadow-sm">
             <div className="flex-1 flex items-center overflow-hidden pr-4">
-            <TabBar
-              tabs={tabs}
-              activeTabId={activeTabId}
-              bookmarks={bookmarks}
-              onTabClick={handleTabClick}
-              onCloseTab={handleCloseTab}
-              onAddTab={handleAddTab}
-              onToggleSidebar={toggleSidebar}
-              onTabContextMenu={handleTabContextMenu}
-            />
+              <TabBar tabs={tabs} activeTabId={activeTabId} bookmarks={bookmarks} onTabClick={handleTabClick} onCloseTab={handleCloseTab} onAddTab={handleAddTab} onToggleSidebar={toggleSidebar} onTabContextMenu={handleTabContextMenu} />
             </div>
             <div className="flex shrink-0 items-center gap-2">
               <div className="w-80">

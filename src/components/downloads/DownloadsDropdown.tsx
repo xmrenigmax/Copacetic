@@ -31,8 +31,8 @@ export const DownloadsDropdown = ({ downloads, onClear }: DownloadsDropdownProps
       </button>
       {isOpen && (
         <>
-          <div className="fixed inset-0 z-[99998]" onClick={e => { e.stopPropagation(); setIsOpen(false); }} onMouseDown={e => { e.stopPropagation(); setIsOpen(false); }} />
-          <div className="absolute top-[calc(100%+8px)] right-0 w-80 bg-black border border-white/20 shadow-2xl rounded-xl p-4 z-[99999] flex flex-col gap-3">
+          <div className="fixed inset-0 z-99998" onClick={e => { e.stopPropagation(); setIsOpen(false); }} onMouseDown={e => { e.stopPropagation(); setIsOpen(false); }} />
+          <div className="absolute top-[calc(100%+8px)] right-0 w-80 bg-black border border-white/20 shadow-2xl rounded-xl p-4 z-99999 flex flex-col gap-3">
             <div className="flex items-center justify-between px-1 mb-1">
               <span className="text-[10px] text-white/50 tt-u tracking-widest font-semibold">
                 Downloads
