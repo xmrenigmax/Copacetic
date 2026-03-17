@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const _ = require('lodash');
 
 let mainWindow;
@@ -36,12 +36,18 @@ app.on('window-all-closed', () => {
   }
 });
 
+// The crucial missing bridge that actually triggers the download!
+ipcMain.on('download-url', (event, url) => {
+  if (mainWindow) {
+    mainWindow.webContents.downloadURL(url);
+  }
+});
+
 // --- DOWNLOAD MANAGER BRIDGE ---
 app.on('web-contents-created', (event, contents) => {
   if (contents.getType() === 'webview') {
     contents.session.on('will-download', (event, item, webContents) => {
-
-      const id = item.getStartTime().toString();
+      const id = Date.now().toString() + Math.random().toString();
       const filename = item.getFilename();
 
       mainWindow.webContents.send('download-started', { id, filename });
@@ -50,7 +56,6 @@ app.on('web-contents-created', (event, contents) => {
         if (state === 'interrupted') {
           mainWindow.webContents.send('download-progress', { id, progress: 0, state: 'interrupted' });
         } else if (state === 'progressing') {
-
           if (item.isPaused()) return;
           const progress = item.getReceivedBytes() / item.getTotalBytes();
           mainWindow.webContents.send('download-progress', { id, progress, state: 'downloading' });

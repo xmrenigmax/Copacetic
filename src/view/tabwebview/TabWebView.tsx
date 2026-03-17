@@ -1,18 +1,8 @@
-import React, {
-  useEffect,
-  useRef,
-  useState
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import _ from 'lodash';
-import {
-  StartPageView
-} from '../startpage/StartPageView';
-import {
-  ErrorPageView
-} from '../errorpage/ErrorPageView';
-import {
-  ContextMenuItem
-} from '@/hooks/useContextMenu';
+import { StartPageView } from '../startpage/StartPageView';
+import { ErrorPageView } from '../errorpage/ErrorPageView';
+import { ContextMenuItem } from '@/hooks/useContextMenu';
 
 interface Tab {
   id: number;
@@ -27,15 +17,14 @@ interface TabWebViewProps {
   openContextMenu: (x: number, y: number, items: ContextMenuItem[]) => void;
   onUpdateTitle: (id: number, title: string) => void;
   onUpdateUrl: (id: number, url: string) => void;
-  onAddToHistory: (url: string, title: string) => void;
+  onAddToHistory: (url: string, title: string, type?: 'page' | 'download') => void;
   onAddBookmark: (url: string, title: string) => void;
 }
 
 export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpdateTitle, onUpdateUrl, onAddToHistory, onAddBookmark }: TabWebViewProps) => {
   const webviewRef = useRef<any>(null);
-
-  const [ isLoading, setIsLoading ] = useState(false);
-  const [ errorData, setErrorData ] = useState<{ code: string; description: string; url: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorData, setErrorData] = useState<{ code: string; description: string; url: string } | null>(null);
 
   useEffect(() => {
     if (tab.url === 'copacetic://newtab') {
@@ -48,9 +37,8 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
     if (!_.isNull(webview)) {
       const handleTitleUpdate = (event: any) => {
         onUpdateTitle(tab.id, event.title);
-
         if (!tab.url.startsWith('copacetic://')) {
-          onAddToHistory(tab.url, event.title);
+          onAddToHistory(tab.url, event.title, 'page');
         }
       };
 
@@ -63,12 +51,7 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
       const handleStopLoading = () => setIsLoading(false);
 
       const handleFailLoad = (event: any) => {
-        const {
-          errorCode,
-          errorDescription,
-          validatedURL,
-          isMainFrame
-        } = event;
+        const { errorCode, errorDescription, validatedURL, isMainFrame } = event;
         if (isMainFrame && errorCode !== -3) {
           setIsLoading(false);
           setErrorData({ code: `ERR_${errorCode}`, description: errorDescription, url: validatedURL });
@@ -87,24 +70,31 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
         if (webview.canGoBack()) {
           menuItems.push({ id: 'back', label: 'Go Back', action: () => webview.goBack() });
         }
-
         if (webview.canGoForward()) {
           menuItems.push({ id: 'forward', label: 'Go Forward', action: () => webview.goForward() });
         }
-
         menuItems.push({ id: 'reload', label: 'Reload Page', action: () => webview.reload() });
         menuItems.push({ id: 'bookmark', label: 'Bookmark Page', action: () => onAddBookmark(tab.url, tab.title) });
         menuItems.push({ isDivider: true, id: 'div1', label: '', action: () => {} });
 
+        let ipcRenderer: any = null;
+        if (typeof window !== 'undefined' && window.require) {
+          ipcRenderer = window.require('electron').ipcRenderer;
+        }
+
         if (params.mediaType === 'image' && !_.isEmpty(params.srcURL)) {
           menuItems.push({ id: 'copy-image', label: 'Copy Image', action: () => webview.copyImageAt(params.x, params.y) });
-          menuItems.push({ id: 'download-image', label: 'Save Image As...', action: () => webview.downloadURL(params.srcURL) });
+          if (!_.isNull(ipcRenderer)) {
+            menuItems.push({ id: 'download-image', label: 'Save Image As...', action: () => ipcRenderer.send('download-url', params.srcURL) });
+          }
           menuItems.push({ isDivider: true, id: 'div-img', label: '', action: () => {} });
         }
 
         if (!_.isNull(params.linkURL) && !_.isEmpty(params.linkURL)) {
           menuItems.push({ id: 'copy-link', label: 'Copy Link Address', action: () => navigator.clipboard.writeText(params.linkURL) });
-          menuItems.push({ id: 'download-link', label: 'Download Linked File', action: () => webview.downloadURL(params.linkURL) });
+          if (!_.isNull(ipcRenderer)) {
+            menuItems.push({ id: 'download-link', label: 'Download Linked File', action: () => ipcRenderer.send('download-url', params.linkURL) });
+          }
         } else if (params.mediaType !== 'image') {
           menuItems.push({ id: 'copy-url', label: 'Copy Page URL', action: () => navigator.clipboard.writeText(tab.url) });
         }
@@ -135,7 +125,7 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
         webview.removeEventListener('context-menu', handleContextMenu);
       };
     }
-  }, [ tab.id, tab.url, onUpdateTitle, onUpdateUrl, openContextMenu ]);
+  }, [ tab.id, tab.url, onUpdateTitle, onUpdateUrl, openContextMenu, onAddToHistory, onAddBookmark ]);
 
   const handleRetry = () => {
     setErrorData(null);
@@ -149,7 +139,6 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
       {isLoading && (
         <div className="absolute top-0 left-0 w-full h-[2px] bg-linear-to-r from-transparent via-blue-500/80 to-transparent animate-pulse z-50 pointer-events-none" />
       )}
-
       {tab.url === 'copacetic://newtab' ? (
         <StartPageView isActive={isActive} auroraTheme={auroraTheme} onNavigate={(newUrl) => onUpdateUrl(tab.id, newUrl)} />
       ) : !_.isNull(errorData) ? (
