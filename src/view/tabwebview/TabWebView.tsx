@@ -79,23 +79,18 @@ export const TabWebView = ({ tab, isActive, auroraTheme, openContextMenu, onUpda
         menuItems.push({ id: 'bookmark', label: 'Bookmark Page', action: () => onAddBookmark(tab.url, tab.title) });
         menuItems.push({ isDivider: true, id: 'div1', label: '', action: () => {} });
 
-        let ipcRenderer: any = null;
-        if (typeof window !== 'undefined' && window.require) {
-          ipcRenderer = window.require('electron').ipcRenderer;
-        }
-
         if (params.mediaType === 'image' && !_.isEmpty(params.srcURL)) {
           menuItems.push({ id: 'copy-image', label: 'Copy Image', action: () => webview.copyImageAt(params.x, params.y) });
-          if (!_.isNull(ipcRenderer)) {
-            menuItems.push({ id: 'download-image', label: 'Save Image As...', action: () => ipcRenderer.send('download-url', params.srcURL) });
+          if (typeof window !== 'undefined' && window.electronAPI) {
+            menuItems.push({ id: 'download-image', label: 'Save Image As...', action: () => window.electronAPI.downloadURL(params.srcURL) });
           }
           menuItems.push({ isDivider: true, id: 'div-img', label: '', action: () => {} });
         }
 
         if (!_.isNull(params.linkURL) && !_.isEmpty(params.linkURL)) {
           menuItems.push({ id: 'copy-link', label: 'Copy Link Address', action: () => navigator.clipboard.writeText(params.linkURL) });
-          if (!_.isNull(ipcRenderer)) {
-            menuItems.push({ id: 'download-link', label: 'Download Linked File', action: () => ipcRenderer.send('download-url', params.linkURL) });
+          if (typeof window !== 'undefined' && window.electronAPI) {
+            menuItems.push({ id: 'download-link', label: 'Download Linked File', action: () => window.electronAPI.downloadURL(params.linkURL) });
           }
         } else if (params.mediaType !== 'image') {
           menuItems.push({ id: 'copy-url', label: 'Copy Page URL', action: () => navigator.clipboard.writeText(tab.url) });

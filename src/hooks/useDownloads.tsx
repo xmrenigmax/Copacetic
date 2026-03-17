@@ -38,23 +38,17 @@ export const useDownloads = (onDownloadComplete?: (filename: string, url: string
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.require) {
-      const { ipcRenderer } = window.require('electron');
-
-      const handleStarted = (event: any, data: { id: string; filename: string }) => {
+    if (typeof window !== 'undefined' && window.electronAPI) {
+      window.electronAPI.onDownloadStarted(data => {
         addDownload(data.id, data.filename);
-      };
+      });
 
-      const handleProgress = (event: any, data: { id: string; progress: number; state: DownloadItem['state']; url?: string }) => {
+      window.electronAPI.onDownloadProgress(data => {
         updateDownloadProgress(data.id, data.progress, data.state, data.url);
-      };
-
-      ipcRenderer.on('download-started', handleStarted);
-      ipcRenderer.on('download-progress', handleProgress);
+      });
 
       return () => {
-        ipcRenderer.removeListener('download-started', handleStarted);
-        ipcRenderer.removeListener('download-progress', handleProgress);
+        window.electronAPI.removeDownloadListeners();
       };
     }
   }, [ addDownload, updateDownloadProgress ]);

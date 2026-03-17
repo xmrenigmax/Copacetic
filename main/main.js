@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
 const _ = require('lodash');
 
 let mainWindow;
@@ -8,9 +9,10 @@ function createWindow() {
     width: 1280,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      webviewTag: true
+      nodeIntegration: false,
+      contextIsolation: true,
+      webviewTag: true,
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
